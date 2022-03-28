@@ -14,8 +14,6 @@ npm install typescript
 
 index.ts -> index.js/index.js.map 생성
 
----
-
 ## 2. First steps with Typescript
 
 ```ts
@@ -32,8 +30,6 @@ sayHi(name, age); // param이 2개이므로 컴파일 실패
 export {};
 ```
 
----
-
 ## 3. Types in Typescript
 
 ```ts
@@ -49,8 +45,6 @@ export {};
 * `tsc-watch` 추가 (ts코드가 수정될 때마다 자동으로 컴파일)
 
 * `tsconfig.json` 설정 수정 (`dist`에 컴파일된 파일 저장하도록 변경)
-
----
 
 ## 4. Interfaces on Typescript
 
@@ -75,8 +69,6 @@ console.log(sayHi(person));
 
 export {};
 ```
-
----
 
 ## 5. Classes on Typescript part One
 
