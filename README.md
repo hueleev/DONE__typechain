@@ -1,4 +1,4 @@
-#  Typescript로 블록체인 만들기
+#  [Typescript로 블록체인 만들기](https://nomadcoders.co/typescript-for-beginners)
 
 **TypeScript** 👍 super set of JavaScript
 
@@ -32,6 +32,8 @@ sayHi(name, age); // param이 2개이므로 컴파일 실패
 export {};
 ```
 
+---
+
 ## 3. Types in Typescript
 
 ```ts
@@ -40,8 +42,65 @@ const sayHi = (name:string, age:number, gender:string): string => { // param/ret
 };
 
 console.log(sayHi("Nicolas", 44, "male"));
+
+export {};
 ```
 
 * `tsc-watch` 추가 (ts코드가 수정될 때마다 자동으로 컴파일)
 
 * `tsconfig.json` 설정 수정 (`dist`에 컴파일된 파일 저장하도록 변경)
+
+---
+
+## 4. Interfaces on Typescript
+
+```ts
+interface Human {
+    name: string;
+    age: number;
+    gender: string;
+}
+
+const person = {
+    name: "nicolas",
+    age: 22,
+    gender: "male"
+};
+
+const sayHi = (person: Human): string => {
+    return `Hello ${person.name}, you are ${person.age}, you are a ${person.gender}`;
+};
+
+console.log(sayHi(person));
+
+export {};
+```
+
+---
+
+## 5. Classes on Typescript part One
+
+`interface`는 js로 컴파일 되지 않는다. 이런 구조가 필요한 경우 `class`를 사용한다.
+
+```ts
+class Human {
+    public name: string;
+    public age: number;
+    public gender: string;
+    constructor(name: string, age: number, gender?: string){ // 생성자
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+    }
+}
+
+const lynn = new Human('lynn', 18, 'female');
+
+const sayHi = (person: Human): string => {
+    return `Hello ${person.name}, you are ${person.age}, you are a ${person.gender}`;
+};
+
+console.log(sayHi(lynn));
+
+export {};
+```
