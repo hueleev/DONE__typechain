@@ -271,3 +271,148 @@ console.log(createNewBlock("hello"), createNewBlock("byebye"));
 
 export { };
 ```
+
+## 9~10. Validating BlockStructure
+
+```ts
+import * as CryptoJS from "crypto-js";
+
+class Block {
+    // Block 선언하지 않아도 사용 가능 (static)
+    static calculateBlockHash = (
+        index: number,
+        previousHash: string,
+        timestamp: number,
+        data: string
+    ): string =>
+        CryptoJS.SHA256(index + previousHash + timestamp + data).toString();
+
+    static validateStructure = (aBlock: Block): boolean =>
+        typeof aBlock.index === "number" &&
+        typeof aBlock.hash === "string" &&
+        typeof aBlock.previousHash === "string" &&
+        typeof aBlock.timestamp === "number" &&
+        typeof aBlock.data === "string";
+
+    public index: number;
+    public hash: string;
+    public previousHash: string;
+    public data: string;
+    public timestamp: number;
+    constructor(
+        index: number,
+        hash: string,
+        previousHash: string,
+        data: string,
+        timestamp: number
+    ) {
+        this.index = index;
+        this.hash = hash;
+        this.previousHash = previousHash;
+        this.data = data;
+        this.timestamp = timestamp;
+    }
+}
+
+const genesisBlock: Block = new Block(0, "202020202020", "", "Hello", 123456);
+
+let blockchain: Block[] = [genesisBlock];
+
+const getBlockchain = (): Block[] => blockchain;
+const getLatestBlock = (): Block => blockchain[blockchain.length - 1];
+const getNewTimeStamp = (): number => Math.round(new Date().getTime() / 1000);
+
+const createNewBlock = (data: string): Block => {
+    const previousBlock: Block = getLatestBlock();
+    const newIndex: number = previousBlock.index + 1;
+    const newTimestamp: number = getNewTimeStamp();
+    const newHash: string = Block.calculateBlockHash(
+        newIndex,
+        previousBlock.hash,
+        newTimestamp,
+        data
+    );
+    const newBlock: Block = new Block(
+        newIndex,
+        newHash,
+        previousBlock.hash,
+        data,
+        newTimestamp
+    );
+    addBlock(newBlock); // block 넣어주기
+    return newBlock;
+};
+
+const getHashforBlock = (aBlock: Block) : string => Block.calculateBlockHash(aBlock.index, aBlock.previousHash, aBlock.timestamp, aBlock.data);
+
+const isBlockValid = (candidateBlock: Block, previosBlock: Block): boolean => {
+    if (!Block.validateStructure(candidateBlock)) {
+        return false;
+    } else if (previosBlock.index + 1 !== candidateBlock.index) {
+        return false;
+    } else if (previosBlock.hash !== candidateBlock.previousHash) {
+        return false;
+    } else if (getHashforBlock(candidateBlock) !== candidateBlock.hash) {
+        return false;
+    } else {
+        return true;
+    }
+};
+
+const addBlock = (candidateBlock: Block) : void => {
+    if (isBlockValid(candidateBlock, getLatestBlock())) {
+        blockchain.push(candidateBlock);
+    }
+}
+
+createNewBlock("second block");
+createNewBlock("third block");
+createNewBlock("fourth block");
+
+console.log(blockchain);
+
+export {};
+```
+
+### - **console**
+```
+[
+  Block {
+    index: 0,
+    hash: '202020202020',
+    previousHash: '',
+오후 2:37:30 - File change detected. Starting incremental compilation...
+
+
+오후 2:37:30 - Found 0 errors. Watching for file changes.
+[
+  Block {
+    index: 0,
+    hash: '202020202020',
+    previousHash: '',
+    data: 'Hello',
+    timestamp: 123456
+  },
+  Block {
+    index: 1,
+    hash: 'b5327d42f03b8915e52a4d8ca02c5d44d4c5118b3fc0c060a6e0f0d3684aa727',        
+    previousHash: '202020202020',
+    data: 'second block',
+    timestamp: 1649050652
+  },
+  Block {
+    index: 2,
+    hash: 'b011cc0dc01e18934f483c55bb3e7938cfa448a81bd61cd1ed5e5d9b4c7e3d0e',        
+    previousHash: 'b5327d42f03b8915e52a4d8ca02c5d44d4c5118b3fc0c060a6e0f0d3684aa727',
+    data: 'third block',
+    timestamp: 1649050652
+  },
+  Block {
+    index: 3,
+    hash: 'cd865384c8c942fdece88daf34b7a73ab65931bd3895e62c002b5dea05c81eab',
+    previousHash: 'b011cc0dc01e18934f483c55bb3e7938cfa448a81bd61cd1ed5e5d9b4c7e3d0e',
+    data: 'fourth block',
+    timestamp: 1649050652
+  }
+]
+```
