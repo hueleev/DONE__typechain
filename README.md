@@ -96,3 +96,52 @@ console.log(sayHi(lynn));
 
 export {};
 ```
+
+## 6. Blockchain Creating a Block
+
+```ts
+// 블록 생성자
+class Block {
+    public index: number;
+    public hash: string;
+    public previousHash: string;
+    public data: string;
+    public timestamp: number;
+    constructor(
+        index: number,
+        hash: string,
+        previousHash: string,
+        data: string,
+        timestamp: number
+    ) {
+       this.index = index;
+       this.hash = hash;
+       this.previousHash = previousHash;
+       this.data = data;
+       this.timestamp = timestamp; 
+    }
+}
+
+// 블록 선언
+const genesisBlock: Block= new Block(0, "202020202020", "", "Hello", 123456);
+
+// array 생성
+let blockchain: [Block] = [genesisBlock];
+
+console.log(blockchain);
+
+export {};
+```
+
+### - **console**
+```
+[
+  Block {
+    index: 0,
+    hash: '202020202020',
+    previousHash: '',    
+    data: 'Hello',       
+    timestamp: 123456    
+  }
+]
+```
