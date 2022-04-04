@@ -1,15 +1,6 @@
 import * as CryptoJS from "crypto-js";
 
 class Block {
-    public index: number;
-    public hash: string;
-    public previousHash: string;
-    public data: string;
-    public timestamp: number;
-
-    // Block 선언해야만 사용 가능
-    sayHello = () => {return "HELLO"};
-
     // Block 선언하지 않아도 사용 가능 (static)
     static calculateBlockHash = (
         index: number,
@@ -19,6 +10,11 @@ class Block {
     ): string =>
         CryptoJS.SHA256(index + previousHash + timestamp + data).toString();
 
+    public index: number;
+    public hash: string;
+    public previousHash: string;
+    public data: string;
+    public timestamp: number;
     constructor(
         index: number,
         hash: string,
@@ -34,16 +30,34 @@ class Block {
     }
 }
 
-console.log(Block.calculateBlockHash(1, "111", 1234556, "heello"));
-
 const genesisBlock: Block = new Block(0, "202020202020", "", "Hello", 123456);
 
 let blockchain: Block[] = [genesisBlock];
 
 const getBlockchain = (): Block[] => blockchain;
-const getLatestBlock = (): Block => getBlockchain[blockchain.length - 1];
+const getLatestBlock = (): Block => blockchain[blockchain.length - 1];
 const getNewTimeStamp = (): number => Math.round(new Date().getTime() / 1000);
 
-console.log(blockchain);
+const createNewBlock = (data: string): Block => {
+    const previousBlock: Block = getLatestBlock();
+    const newIndex: number = previousBlock.index + 1;
+    const newTimestamp: number = getNewTimeStamp();
+    const newHash: string = Block.calculateBlockHash(
+        newIndex,
+        previousBlock.hash,
+        newTimestamp,
+        data
+    );
+    const newBlock: Block = new Block(
+        newIndex,
+        newHash,
+        previousBlock.hash,
+        data,
+        newTimestamp
+    );
+    return newBlock;
+};
 
-export {};
+console.log(createNewBlock("hello"), createNewBlock("byebye"));
+
+export { };
